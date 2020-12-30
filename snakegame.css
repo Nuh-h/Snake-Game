@@ -13,8 +13,29 @@ td,tr,input {
 }
 
 h1 + div{
-	background-color:blue;
+	background-color:#FF5722;
 	cursor:pointer;
-	width:10%;
+	width:15%;
 	padding:5px;
+	text-align:center;
+}
+td{
+	background-color:#81689e;
+	padding:2px;
+}
+table{
+	border-spacing:0;
+	border:5px solid #020202;
+}
+input{
+
+}
+.bonus:before{
+    font-family:"Font Awesome 5 Free";
+    content:"\f185";
+    position:relative;
+    left:-5px;
+    top:-1px;
+    padding:5px;
+    color:#f50000e8;
 }
