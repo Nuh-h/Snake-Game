@@ -2,12 +2,13 @@
 const container = document.querySelector('.container');
 var table = document.createElement('table');
 
+
 for(var i=0; i<15;i++){
 	var row = document.createElement('tr');
 	for(var j=0; j<15;j++){
 		var cell = document.createElement('td');
-		if(j<5 && i===0){cell.innerHTML+='<input type="checkbox" checked>';}
-		else{cell.innerHTML+='<input type="checkbox">';}
+
+		cell.innerHTML+='<input type="checkbox">';
 		row.appendChild(cell);
 	}
 	table.appendChild(row);
@@ -52,54 +53,85 @@ function clearBoard(snake,lastDeleted){
 		k=1;
 	}
 }
-	
-function bonusPoint(prev,b){
-	if(prev!=undefined)table.rows[prev[0]].cells[prev[1]].firstElementChild.classList.remove('bonus');
-	if(b==true){ table.rows[prev[0]].cells[prev[1]].firstElementChild.classList.remove('bonus'); return; }
+
+function randPoint(firstPoint=false){
+	if(firstPoint){
+		var c = Math.round(Math.random()*3);
+		var point;
+		switch(c){
+			case 0: point = [1,Math.round(Math.random())*14]; break;
+			case 1: point = [Math.round(Math.random())*14,1]; break;
+			case 2: point = [14,Math.round(Math.random())*14]; break;
+			default: point = [Math.round(Math.random())*14,14]; break;
+		}
+		eventkey=3-c;
+		return point;
+	}
 	var x = Math.round(Math.random()*14)
 	var y = Math.round(Math.random()*14)
 	while(table.rows[x].cells[y].firstElementChild.checked){
 		x = Math.round(Math.random()*14)
 		y = Math.round(Math.random()*14)
 	}
+	return [x,y];
+}
+function bonusPoint(prev,b){
+	if(prev!=undefined)table.rows[prev[0]].cells[prev[1]].firstElementChild.classList.remove('bonus');
+	if(b==true){ table.rows[prev[0]].cells[prev[1]].firstElementChild.classList.remove('bonus'); return; }
+	var point = randPoint();
+	var x=point[0]
+	var y=point[1]
 	table.rows[x].cells[y].firstElementChild.classList.add('bonus');
 	return [x,y];
 }
 
-function startGame(){	
-	var p = snake.pop()
-	//console.log(eventkey)
-	if(i!==0) {snake.unshift(addVecs(snake[0],states[eventkey%37]))}
-	else{snake.unshift(addVecs(snake[0],[0,1]))};
-	var s = [snake[0][0],snake[0][1]];
-	//console.log(s)
-	//console.log(table.rows[s[0]].cells[s[1]]);
+function startGame(){
+	
+	var p = snake[snake.length-1];
+	
+	if(i!==0) {
+		snake.unshift(addVecs(snake[0],states[eventkey%37]))
+	}
+	else{ 
+		snake.unshift(addVecs(snake[0],[0,1]))
+	};
+	
+	var s = [snake[0][0],snake[0][1]]
 	if( s[0]<0 || s[0]>14 || s[1]<0 || s[1]>14 || table.rows[s[0]].cells[s[1]].firstElementChild.checked){
 		gameOver=true;
 		alert("game over"); 
 		restart=true;
 		
 		prev=bonusPoint(prev,true);
+		
 		clearInterval(interval);
 		clearBoard(snake,p);
+		
 		topScores.push(totalScore);
 		topScores=topScores.sort().reverse();
+		
 		var scb = document.querySelector('.scoreboard').firstElementChild;
 		scb.innerHTML = "Top 3 scores: "+topScores[0]+", "+topScores[1]+", "+topScores[2]+".";
+		
 		console.log(topScores);
 		topScores.pop();
 		totalScore=0;
+		
 	}else{
 		if(table.rows[s[0]].cells[s[1]].firstElementChild.classList.contains('bonus')) {
 			totalScore+=bonusAmount;
 			prev=bonusPoint(prev);
 			console.log(totalScore);
 		}
-		table.rows[p[0]].cells[p[1]].firstElementChild.checked=false;
+		else{
+			table.rows[p[0]].cells[p[1]].firstElementChild.checked=false;
+			snake.pop();
+		}
 		table.rows[s[0]].cells[s[1]].firstElementChild.checked=true; 
 	}
 	i=1;
 }
+
 var snake;
 var states;
 var prev;
@@ -114,7 +146,8 @@ function begin(){
 	restart=false
 	
 	var table = document.querySelector('table');
-	snake = [[0,4],[0,3],[0,2],[0,1],[0,0]];
+	var startPoint = randPoint(true); //c=0, st:3,  c=1, st:2,  c=2, st:1, c=3 st:0
+	snake = [startPoint];
 	states = [[0,-1],[-1,0],[0,1],[1,0]];//Direction the snake should head to
 	
 	prev = bonusPoint();
@@ -143,7 +176,7 @@ function begin(){
 
 
 /*** canvas animation from stackExchange ***/
-const canvas = document.querySelector('#canvas');
+/* const canvas = document.querySelector('#canvas');
 canvas.width = 600//window.innerWidth;
 canvas.height = 400//window.innerHeight;
 
@@ -219,4 +252,4 @@ function intersects(a,b,c,d,p,q,r,s) {
   }
 };
 
-//****** LOOK INTO WEBGL SOMETIME *******
+//****** LOOK INTO WEBGL SOMETIME ******* */
