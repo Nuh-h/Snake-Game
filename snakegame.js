@@ -23,8 +23,11 @@ document.body.children[1].addEventListener('click', begin);
 
 var scoreboard = document.createElement('div');
 scoreboard.classList.add('scoreboard');
+var liveScore = document.createElement('p');
 var scoreHeader = document.createElement('p');
+liveScore.innerHTML="Live score:";
 scoreHeader.innerHTML="Top 3 scores:"
+scoreboard.appendChild(liveScore);
 scoreboard.appendChild(scoreHeader);
 document.body.insertBefore(scoreboard,container);
 
@@ -34,6 +37,8 @@ var eventkey = 2; // direction according to keypress of left, up, down, right. d
 var restart=true; //prevents starting another snake while game ongoing
 var totalScore=0; //in-game score
 var bonusAmount=10; //bonus points for bonus object
+var topscores = document.querySelector('.scoreboard').lastElementChild;
+var livescore = document.querySelector('.scoreboard').firstElementChild;
 //console.log("start game");
 
 document.getElementsByTagName('body')[0].style.overflow="hidden";
@@ -110,18 +115,19 @@ function startGame(){
 		topScores.push(totalScore);
 		topScores=topScores.sort().reverse();
 		
-		var scb = document.querySelector('.scoreboard').firstElementChild;
-		scb.innerHTML = "Top 3 scores: "+topScores[0]+", "+topScores[1]+", "+topScores[2]+".";
+		topscores.innerHTML = "Top 3 scores: "+topScores[0]+", "+topScores[1]+", "+topScores[2]+".";
 		
 		console.log(topScores);
 		topScores.pop();
 		totalScore=0;
+		
 		
 	}else{
 		if(table.rows[s[0]].cells[s[1]].firstElementChild.classList.contains('bonus')) {
 			totalScore+=bonusAmount;
 			prev=bonusPoint(prev);
 			console.log(totalScore);
+			livescore.innerHTML="Live score: "+totalScore;
 		}
 		else{
 			table.rows[p[0]].cells[p[1]].firstElementChild.checked=false;
@@ -154,7 +160,7 @@ function begin(){
 	gameOver = false;
 	var i=0;
 	
-	interval = setInterval(startGame,500); 
+	interval = setInterval(startGame,400); 
 };	
 
 //if(gameOver) clearInterval(interval);
