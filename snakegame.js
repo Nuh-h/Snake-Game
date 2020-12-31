@@ -55,7 +55,7 @@ var livescore = document.querySelector('.scoreboard').firstElementChild;
 var speed=500;
 //console.log("start game");
 speedBtn.addEventListener('change',(e)=>{speed=100*parseInt(e.target.value);})
-document.getElementsByTagName('body')[0].style.overflow="hidden";
+//document.getElementsByTagName('body')[0].style.overflow="hidden";
 document.body.addEventListener('keydown',(e)=>{
 	eventkey=e.code==="ArrowLeft"?37:(e.code==="ArrowUp"?38:(e.code==="ArrowRight"?39:40));
 })
@@ -176,3 +176,5 @@ function begin(){
 	
 	interval = setInterval(startGame,1000-speed); 
 };	
+
+// Mobile-version to be added very soon
