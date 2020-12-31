@@ -34,6 +34,7 @@ document.body.insertBefore(scoreboard,container);
 /*** Global parameters ***/
 var topScores = [0,0,0]; // top three scores
 var eventkey = 2; // direction according to keypress of left, up, down, right. default 2===right
+var previouskey; //to prevent from eating backwards
 var restart=true; //prevents starting another snake while game ongoing
 var totalScore=0; //in-game score
 var bonusAmount=10; //bonus points for bonus object
@@ -91,15 +92,14 @@ function bonusPoint(prev,b){
 }
 
 function startGame(){
-	
+	if(previouskey!==eventkey && ((previouskey%37%2==0 && eventkey%37%2==0) || (previouskey%37%2==1 && eventkey%37%2==1))){
+		//return //will pause the game.
+		eventkey=previouskey 
+	}
 	var p = snake[snake.length-1];
 	
-	if(i!==0) {
-		snake.unshift(addVecs(snake[0],states[eventkey%37]))
-	}
-	else{ 
-		snake.unshift(addVecs(snake[0],[0,1]))
-	};
+	if(i!==0) { snake.unshift(addVecs(snake[0],states[eventkey%37])) }
+	else{ snake.unshift(addVecs(snake[0],[0,1]))	};
 	
 	var s = [snake[0][0],snake[0][1]]
 	if( s[0]<0 || s[0]>14 || s[1]<0 || s[1]>14 || table.rows[s[0]].cells[s[1]].firstElementChild.checked){
@@ -113,14 +113,14 @@ function startGame(){
 		clearBoard(snake,p);
 		
 		topScores.push(totalScore);
-		topScores=topScores.sort().reverse();
+		topScores=topScores.sort(function(a,b){return (+a) - (+b);}).reverse();
 		
 		topscores.innerHTML = "Top 3 scores: "+topScores[0]+", "+topScores[1]+", "+topScores[2]+".";
 		
 		console.log(topScores);
 		topScores.pop();
 		totalScore=0;
-		
+		livescore.innerHTML="Live score: "+totalScore;
 		
 	}else{
 		if(table.rows[s[0]].cells[s[1]].firstElementChild.classList.contains('bonus')) {
@@ -136,6 +136,7 @@ function startGame(){
 		table.rows[s[0]].cells[s[1]].firstElementChild.checked=true; 
 	}
 	i=1;
+	previouskey=eventkey;
 }
 
 var snake;
@@ -160,7 +161,7 @@ function begin(){
 	gameOver = false;
 	var i=0;
 	
-	interval = setInterval(startGame,400); 
+	interval = setInterval(startGame,200); 
 };	
 
 //if(gameOver) clearInterval(interval);
