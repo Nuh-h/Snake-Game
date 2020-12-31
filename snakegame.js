@@ -33,12 +33,13 @@ document.body.insertBefore(scoreboard,container);
 
 var speedLabel = document.createElement('label');
 speedLabel.innerHTML="Speed ";
-var speed = document.createElement('input');
-speed.classList.add("speed");
-speed.type="range";
-speed.min="3";
-speed.max="9";
-speedLabel.appendChild(speed);
+var speedBtn = document.createElement('input');
+speedBtn.classList.add("speed");
+speedBtn.type="range";
+speedBtn.min="3";
+speedBtn.max="9";
+speedBtn.value="5";
+speedLabel.appendChild(speedBtn);
 container.appendChild(speedLabel);
 //Defual for speed needed...
 
@@ -51,9 +52,9 @@ var totalScore=0; //in-game score
 var bonusAmount=10; //bonus points for bonus object
 var topscores = document.querySelector('.scoreboard').lastElementChild;
 var livescore = document.querySelector('.scoreboard').firstElementChild;
-var speed;
+var speed=500;
 //console.log("start game");
-speed.addEventListener('change',(e)=>{speed=100*parseInt(e.target.value); console.log(speed)})
+speedBtn.addEventListener('change',(e)=>{speed=100*parseInt(e.target.value);})
 document.getElementsByTagName('body')[0].style.overflow="hidden";
 document.body.addEventListener('keydown',(e)=>{
 	eventkey=e.code==="ArrowLeft"?37:(e.code==="ArrowUp"?38:(e.code==="ArrowRight"?39:40));
@@ -129,7 +130,7 @@ function startGame(){
 		
 		topscores.innerHTML = "Top 3 scores: "+topScores[0]+", "+topScores[1]+", "+topScores[2]+".";
 		
-		console.log(topScores);
+		//console.log(topScores);
 		topScores.pop();
 		totalScore=0;
 		livescore.innerHTML="Live score: "+totalScore;
@@ -138,7 +139,7 @@ function startGame(){
 		if(table.rows[s[0]].cells[s[1]].firstElementChild.classList.contains('bonus')) {
 			totalScore+=bonusAmount;
 			prev=bonusPoint(prev);
-			console.log(totalScore);
+			//console.log(totalScore);
 			livescore.innerHTML="Live score: "+totalScore;
 		}
 		else{
