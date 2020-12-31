@@ -45,3 +45,13 @@ input{
     padding:5px;
     color:#f50000e8;
 }
+label{
+	display:flex;
+	align-items:baseline;
+	justify-content:space-around;
+	align-content:baseline;
+}
+.speed{
+	margin:5px;
+	width:70%
+}

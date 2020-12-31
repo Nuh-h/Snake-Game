@@ -31,6 +31,17 @@ scoreboard.appendChild(liveScore);
 scoreboard.appendChild(scoreHeader);
 document.body.insertBefore(scoreboard,container);
 
+var speedLabel = document.createElement('label');
+speedLabel.innerHTML="Speed ";
+var speed = document.createElement('input');
+speed.classList.add("speed");
+speed.type="range";
+speed.min="3";
+speed.max="9";
+speedLabel.appendChild(speed);
+container.appendChild(speedLabel);
+//Defual for speed needed...
+
 /*** Global parameters ***/
 var topScores = [0,0,0]; // top three scores
 var eventkey = 2; // direction according to keypress of left, up, down, right. default 2===right
@@ -40,8 +51,9 @@ var totalScore=0; //in-game score
 var bonusAmount=10; //bonus points for bonus object
 var topscores = document.querySelector('.scoreboard').lastElementChild;
 var livescore = document.querySelector('.scoreboard').firstElementChild;
+var speed;
 //console.log("start game");
-
+speed.addEventListener('change',(e)=>{speed=100*parseInt(e.target.value); console.log(speed)})
 document.getElementsByTagName('body')[0].style.overflow="hidden";
 document.body.addEventListener('keydown',(e)=>{
 	eventkey=e.code==="ArrowLeft"?37:(e.code==="ArrowUp"?38:(e.code==="ArrowRight"?39:40));
@@ -161,102 +173,5 @@ function begin(){
 	gameOver = false;
 	var i=0;
 	
-	interval = setInterval(startGame,200); 
+	interval = setInterval(startGame,1000-speed); 
 };	
-
-//if(gameOver) clearInterval(interval);
-
-
-//function genRand
-//generate random coordinate, check if input is checked, if so repeat, if not, add to classList bonus icon.
-// add extra condition to game, to check if there is bonus, ++bonusAmount to score. 
-// Do similar for normal goalPost, add appropriate icon.
-//If gameOver, offer to try again. 
-//Possibly keep track of history, by appending to a container for scores, structures as a table.
-
-/////TWO pieces: shouldn't be able to eat backwards, shouldn't gameover without using making a move;
-
-
-
-
-
-
-
-/*** canvas animation from stackExchange ***/
-/* const canvas = document.querySelector('#canvas');
-canvas.width = 600//window.innerWidth;
-canvas.height = 400//window.innerHeight;
-
-const context = canvas.getContext("2d");
-
-//canvas.addEventListener('mousemove', drawRect);
-
-function drawRect(event){
-	var x = event.clientX;
-	var y = event.clientY;
-	
-	context.rect(x,y,20,20)
-	context.stroke()
-}
-
-
-
-const ctx = context;
-
-function render(time) {
-  time *= 0.001;
-  resizeCanvasToDisplaySize(ctx.canvas);
- 
-  ctx.fillStyle = "#DDE";
-  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  ctx.save();
- 
-  const spacing = 74;
-  const size = 48;
-  const across = ctx.canvas.width  / spacing + 1;
-  const down   = ctx.canvas.height / spacing + 1;
-  const s = Math.sin(time);
-  const c = Math.cos(time);
-  for (let y = 0; y <= down; ++y) {
-    for (let x = 0; x <= across; ++x) {
-      ctx.setTransform(c, -s, s, c, x * spacing, y * spacing);
-      ctx.strokeRect(-size / 2, -size / 2, size, size);
-    }
-  }
-  
-  ctx.restore();
-  
-  requestAnimationFrame(render);
-}
-requestAnimationFrame(render);
-
-function resizeCanvasToDisplaySize(canvas) {
-   // look up the size the canvas is being displayed
-   const width = canvas.clientWidth;
-   const height = canvas.clientHeight;
-
-   // If it's resolution does not match change it
-   if (canvas.width !== width || canvas.height !== height) {
-     canvas.width = width;
-     canvas.height = height;
-     return true;
-   }
-
-   return false;
-}
-
-
-// returns true iff the line from (a,b)->(c,d) intersects with (p,q)->(r,s)
-function intersects(a,b,c,d,p,q,r,s) {
-  var det, gamma, lambda;
-  det = (c - a) * (s - q) - (r - p) * (d - b);
-  if (det === 0) {
-    return false;
-  } else {
-    lambda = ((s - q) * (r - a) + (p - r) * (s - b)) / det;
-    gamma = ((b - d) * (r - a) + (c - a) * (s - b)) / det;
-    return (0 < lambda && lambda < 1) && (0 < gamma && gamma < 1);
-  }
-};
-
-//****** LOOK INTO WEBGL SOMETIME ******* */
